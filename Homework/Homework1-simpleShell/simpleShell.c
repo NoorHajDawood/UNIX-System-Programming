@@ -233,7 +233,7 @@ int executeCommand(char **args)
                 printf("Child process PID: %d\n", pid);
                 if ((status = (*executableFunction[i])(args)) < 0)
                 {
-                    perror(executable[i]);
+                    // perror(executable[i]);
                     exit(status);
                 }
                 return 0;
