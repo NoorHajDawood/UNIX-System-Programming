@@ -296,24 +296,59 @@ char **splitLine(char *line)
     return args;
 }
 
+#define LINE_MAX_LENGTH 1024
 /**
    @brief Read an input line from stdin.
    @return The line (dynamically located).
  */
-char *readLine()
+char *readLine(ssize_t *readBytes)
 {
-    char *line = NULL;
-    size_t lineSize = 0;
-    if (getline(&line, &lineSize, stdin) == -1)
+    // char *line = NULL;
+    // size_t lineSize = 0;
+    // if (getline(&line, &lineSize, stdin) == -1)
+    // {
+    //     if (feof(stdin))
+    //         exit(0);
+    //     else
+    //     {
+    //         perror("readLine");
+    //         exit(1);
+    //     }
+    // }
+    char *line, c;
+    size_t size = LINE_MAX_LENGTH, i = 0;
+
+    line = malloc(LINE_MAX_LENGTH);
+    if (!line)
     {
-        if (feof(stdin))
-            exit(0);
-        else
+        perror("readLine");
+        exit(1);
+    }
+
+    while ((*readBytes = read(STDIN_FILENO, &c, 1)) > 0 && c != '\n')
+    {
+        line[i++] = c;
+        if (i >= size)
         {
-            perror("readLine");
-            exit(1);
+            char *tmp;
+            size += LINE_MAX_LENGTH;
+            tmp = malloc(size);
+            if (!tmp)
+            {
+                free(line);
+                perror("readLine");
+                exit(1);
+            }
+            line = tmp;
         }
     }
+    if (*readBytes < 0)
+    {
+        free(line);
+        perror("readLine");
+        exit(1);
+    }
+    line[i] = 0;
     return line;
 }
 
@@ -325,17 +360,19 @@ void loop()
     char *line;
     char **args;
     int status;
+    ssize_t readBytes;
 
     do
     {
         printf("> ");
-        line = readLine();
+        fflush(stdout);
+        line = readLine(&readBytes);
         args = splitLine(line);
         status = executeCommand(args);
 
         free(line);
         free(args);
-    } while (status);
+    } while (status && readBytes);
 }
 
 /**
