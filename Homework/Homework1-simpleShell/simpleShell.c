@@ -103,7 +103,12 @@ int myLs(char **args)
     // output stream
     if (args[i] && strcmp(args[i], ">") == 0)
     {
-        out = fopen(args[++i], "w");
+        if(args[++i] == NULL)
+        {
+            fprintf(stderr, "ls: expected output file after '>'\n");
+            return -1;
+        }
+        out = fopen(args[i], "w");
         if (out == NULL)
         {
             fprintf(stderr, "ls: cannot open file for write: '%s'\n", args[i]);
@@ -303,6 +308,7 @@ char **splitLine(char *line)
  */
 char *readLine(ssize_t *readBytes)
 {
+    // this block of code acts weird when stdin is a file where eof is not a new line
     // char *line = NULL;
     // size_t lineSize = 0;
     // if (getline(&line, &lineSize, stdin) == -1)
@@ -315,6 +321,7 @@ char *readLine(ssize_t *readBytes)
     //         exit(1);
     //     }
     // }
+
     char *line, c;
     size_t size = LINE_MAX_LENGTH, i = 0;
 
