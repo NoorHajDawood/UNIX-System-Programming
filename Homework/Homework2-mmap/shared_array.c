@@ -27,6 +27,7 @@ int main(int argc, char const *argv[])
             if ((pid = waitpid(pid, &status, 0) < 0))
             {
                 perror("waitpid");
+                munmap(pid_array, SIZE * sizeof(int));
                 return -1;
             }
         }
