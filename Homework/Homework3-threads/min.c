@@ -6,11 +6,11 @@ typedef struct _array
 {
     int length;
     int *array;
-} vector;
+} array;
 
 void *findMin(void *arg)
 {
-    vector arr = *((vector *)arg);
+    array arr = *((array *)arg);
     if (arr.length <= 0)
         return (void *)0;
     long min = arr.array[0];
@@ -27,8 +27,8 @@ int main(int argc, const char *argv[])
     long min;
     int length = argc - 1;
     int *arr;
-    vector arr1 = {length / 2 + length % 2, arr};
-    vector arr2 = {length - length / 2 - length % 2, arr + length / 2 + length % 2};
+    array arr1 = {length / 2 + length % 2, arr};
+    array arr2 = {length - length / 2 - length % 2, arr + length / 2 + length % 2};
 
 
     if (argc <= 1)
