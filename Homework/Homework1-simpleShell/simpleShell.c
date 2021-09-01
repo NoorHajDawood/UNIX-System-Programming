@@ -18,7 +18,7 @@ int myCat(char **args);
     Command list that execute in parent process
     and thier corresponding functions
 */
-char *builtin[] = {
+const char *builtin[] = {
     "cd",
     "exit"};
 
@@ -35,7 +35,7 @@ size_t builtinLength()
     Command list that execute in child process
     and thier corresponding functions
 */
-char *executable[] = {
+const char *executable[] = {
     "ls",
     "cat"};
 
@@ -91,7 +91,7 @@ int myLs(char **args)
     struct dirent *pDirent;
     DIR *pDir = NULL;
     FILE *out = NULL;
-    char *workingDir = NULL;
+    const char *workingDir = NULL;
     size_t i = 1;
 
     // directory to read from
@@ -269,7 +269,7 @@ int executeCommand(char **args)
 char **splitLine(char *line)
 {
     size_t size = ARGS_SIZE, i = 0;
-    char **args = malloc(size * sizeof(char *));
+    char **args = (char **)malloc(size * sizeof(char *));
     char *token, **tempArgs;
 
     if (!args)
@@ -285,7 +285,7 @@ char **splitLine(char *line)
         if (i >= size)
         {
             size += ARGS_SIZE;
-            tempArgs = realloc(args, size * sizeof(char *));
+            tempArgs = (char **)realloc(args, size * sizeof(char *));
             if (!tempArgs)
             {
                 free(args);
@@ -325,7 +325,7 @@ char *readLine(ssize_t *readBytes)
     char *line, c;
     size_t size = LINE_MAX_LENGTH, i = 0;
 
-    line = malloc(LINE_MAX_LENGTH);
+    line = (char *)malloc(LINE_MAX_LENGTH * sizeof(char));
     if (!line)
     {
         perror("readLine");
@@ -339,7 +339,7 @@ char *readLine(ssize_t *readBytes)
         {
             char *tmp;
             size += LINE_MAX_LENGTH;
-            tmp = malloc(size);
+            tmp = (char *)malloc(size * sizeof(char *));
             if (!tmp)
             {
                 free(line);

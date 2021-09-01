@@ -7,7 +7,7 @@
 #define SIZE 3
 int main(int argc, char const *argv[])
 {
-    int *pid_array = mmap(NULL, SIZE * sizeof(int), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
+    int *pid_array = (int*)mmap(NULL, SIZE * sizeof(int), PROT_READ | PROT_WRITE, MAP_ANONYMOUS | MAP_SHARED, -1, 0);
     int pid;
 
     for (int i = 0; i < SIZE; ++i)
